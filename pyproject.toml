@@ -1,0 +1,24 @@
+[project]
+name = "qwenfold"
+version = "0.1.0"
+description = "General-purpose LLM (Qwen) as the sequence encoder of ESMFold, evaluated on CASP"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.6",
+    "transformers>=5.0",
+    "accelerate",
+    "peft",
+    "numpy",
+    "pandas",
+    "psutil",
+    "requests",
+    "tqdm",
+    "tmtools",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["qwenfold"]
