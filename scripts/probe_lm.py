@@ -1,4 +1,4 @@
-"""Does a language model "know" proteins?  Linear probes + sequence likelihood (E008).
+"""Does a language model "know" proteins?  Linear probes + sequence likelihood.
 
     python scripts/probe_lm.py --out outputs/probe --models onehot qwen0.8b qwen0.8b_rand esm35m
     python scripts/probe_lm.py --out outputs/ppl --task ppl --models qwen0.8b esm35m

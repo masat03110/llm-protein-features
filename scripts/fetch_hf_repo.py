@@ -1,8 +1,7 @@
 """Resumable, parallel (HTTP range) download of a Hugging Face repo into a plain folder.
 
-Used because the Xet transfer hosts are unreachable from this machine and a
-single connection is slow.  Usage:
-    python scripts/fetch_hf_repo.py facebook/esmfold_v1 models/esmfold_v1 --workers 8
+Usage (pin --revision to the commit listed in README.md to reproduce the paper):
+    python scripts/fetch_hf_repo.py facebook/esmfold_v1 models/esmfold_v1 --revision <commit> --workers 8
 """
 from __future__ import annotations
 
@@ -36,8 +35,8 @@ def fetch_range(url, path, start, end):
     raise RuntimeError(f"failed: {part}")
 
 
-def fetch_file(repo, fname, outdir, workers):
-    url = f"https://huggingface.co/{repo}/resolve/main/{fname}"
+def fetch_file(repo, fname, outdir, workers, revision="main"):
+    url = f"https://huggingface.co/{repo}/resolve/{revision}/{fname}"
     path = os.path.join(outdir, fname)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     head = requests.head(url, allow_redirects=True, timeout=60)
@@ -78,10 +77,11 @@ def main():
     ap.add_argument("repo")
     ap.add_argument("outdir")
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--revision", default="main", help="branch, tag or commit hash")
     args = ap.parse_args()
-    info = requests.get(f"https://huggingface.co/api/models/{args.repo}", timeout=60).json()
+    info = requests.get(f"https://huggingface.co/api/models/{args.repo}/revision/{args.revision}", timeout=60).json()
     for s in info["siblings"]:
-        fetch_file(args.repo, s["rfilename"], args.outdir, args.workers)
+        fetch_file(args.repo, s["rfilename"], args.outdir, args.workers, args.revision)
 
 
 if __name__ == "__main__":

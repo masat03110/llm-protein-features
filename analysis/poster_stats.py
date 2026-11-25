@@ -30,7 +30,7 @@ def main():
     ap.add_argument("--ref", default="ESMFold")
     ap.add_argument("--out", required=True)
     ap.add_argument("--external", default="AlphaFold2,CASP_,AF3,ColabFold",
-                    help="CASP の提出モデル（参考）。共通単位を決めるときに除く手法名の接頭辞")
+                    help="prefixes of CASP server predictions (reference only); excluded when choosing the common units")
     args = ap.parse_args()
     frames = {}
     for spec in args.csv:
@@ -44,7 +44,7 @@ def main():
     rows = []
     ext = tuple(args.external.split(","))
     for rnd, d in frames.items():
-        # 自分たちの手法すべてに値がある単位だけを使う（回の中で単位数をそろえる）
+        # use only units scored for all of our methods (same units within a round)
         ours = [m for m in d.method.unique() if not m.startswith(ext)]
         common = set.intersection(*(set(d[(d.method == m) & d.tm_score.notna()].unit) for m in ours))
         d = d[d.unit.isin(common)]

@@ -5,7 +5,7 @@
 Same interface as QwenProteinEncoder (forward(seqs) -> (s_lm, mask), save / load /
 trainable_state_dict), so train_distill.py / predict.py can use either.  ESM2 is
 bidirectional, so there is no context "mode".  This is the protein-specific
-baseline of the same size class as the general-purpose LLM (README question 1).
+baseline of the same size class as the general-purpose LLM.
 """
 from __future__ import annotations
 
